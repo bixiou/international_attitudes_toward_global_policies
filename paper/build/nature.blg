@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: nature.aux
+The style file: naturemag_noURL.bst
+Database file #1: global_tax_attitudes.bib
+Warning--empty journal in chancel_world_2022
+Warning--empty journal in issp_international_2019
+You've used 19 entries,
+            2322 wiz_defined-function locations,
+            1113 strings with 14150 characters,
+and the built_in function-call counts, 7201 in all, are:
+= -- 497
+> -- 205
+< -- 0
++ -- 102
+- -- 51
+* -- 911
+:= -- 816
+add.period$ -- 53
+call.type$ -- 19
+change.case$ -- 19
+chr.to.int$ -- 0
+cite$ -- 21
+duplicate$ -- 656
+empty$ -- 624
+format.name$ -- 68
+if$ -- 1407
+int.to.chr$ -- 0
+int.to.str$ -- 19
+missing$ -- 158
+newline$ -- 99
+num.names$ -- 20
+pop$ -- 118
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 117
+stack$ -- 0
+substring$ -- 284
+swap$ -- 666
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 41
+width$ -- 21
+write$ -- 206
+(There were 2 warnings)
