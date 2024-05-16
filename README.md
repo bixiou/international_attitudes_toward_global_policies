@@ -1,7 +1,8 @@
 # Reproduction code for "International Attitudes Toward Global Policies" 
 
 LICENSE: GNU AFFERO GENERAL PUBLIC LICENSE Version 3
-Repository DOI: 
+
+DOI of the github repository: [![DOI](https://zenodo.org/badge/702713860.svg)](https://zenodo.org/doi/10.5281/zenodo.11202245)
 
 # Authors:
 - Adrien Fabre, CNRS and CIRED, adrien.fabre@cnrs.fr (corresponding author).
