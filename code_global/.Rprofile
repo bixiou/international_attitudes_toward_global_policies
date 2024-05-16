@@ -103,7 +103,24 @@ package("segmented")
 #' # package("rddtools") # not available
 #' # package("rddapp") # not available
 #' package("mets")
-package("stargazer") # To fix the bug with is.na() on R 4.2, run the code below from https://gist.github.com/alexeyknorre/b0780836f4cec04d41a863a683f91b53
+if (exists("fixed_stargazer")) { 
+  library(stargazer)
+} else { # To fix the bug with is.na() on R 4.2, run the code below from https://gist.github.com/alexeyknorre/b0780836f4cec04d41a863a683f91b53
+  temp <- getwd()
+  setwd(.libPaths()[2])
+  # detach("package:stargazer", unload=T)
+  remove.packages("stargazer")
+  download.file("https://cran.r-project.org/src/contrib/stargazer_5.2.3.tar.gz", destfile = "stargazer_5.2.3.tar.gz")
+  untar("stargazer_5.2.3.tar.gz") # If it doesn't work, re-open RStudio in administrator mode
+  stargazer_src <- readLines("stargazer/R/stargazer-internal.R")
+  stargazer_src[1990] <- stargazer_src[1995]
+  stargazer_src[1995] <- ""
+  writeLines(stargazer_src, con="stargazer/R/stargazer-internal.R")
+  install.packages("stargazer", repos = NULL, type="source")
+  library(stargazer)
+  setwd(temp)    
+  fixed_stargazer <- T
+}
 # temp <- getwd()
 # setwd(.libPaths()[2])
 # detach("package:stargazer",unload=T)
