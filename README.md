@@ -44,7 +44,7 @@ figures/[country_code/wave]: Figures on the sample restricted to [country/wave].
 figures/OECD: Figures from the Global Survey.
 figures/maps: Maps of net gains from international climate policies.
 
-paper/: LaTeX and PDF files of the main article and online appendices, as well as the pre-registration plan.
+paper/: LaTeX and PDF files of the main article, online appendices and country-specific descriptive statistics, as well as the pre-registration plan.
 
 questionnaire/: Questionnaire files, both in Qualtrics and MS Word format.
 questionnaire/specificities.xlsx: File synthesizing all figures used in the questionnaires and their sources: sociodemographic quotas, wording of policies in different languages, income thresholds, wealth tax estimates, etc.
