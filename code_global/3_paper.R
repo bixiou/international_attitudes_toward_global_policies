@@ -361,7 +361,7 @@ heatmap_multiple(heatmaps_defs[c("foreign_aid_no")])
 
 # Figure S9: figures/maps/gain_gdr_over_gdp_2030.pdf, cf. preparation in code_global/map_GCS_incidence.R
 # Figure S10: figures/maps/diff_gain_gdr_gcs_over_gdp_2030.pdf, cf. preparation in code_global/map_GCS_incidence.R
-time_map_gcs <- Sys.time() - start
+time_map_gcs <- Sys.time()
 source("map_GCS_incidence.R")
 time_map_gcs <- Sys.time() - time_map_gcs
 
@@ -491,9 +491,9 @@ heatmap_wrapper(vars = heatmaps_defs$main_all$vars, data = all, labels = heatmap
 ##### Net gains from the Global Climate Scheme #####
 # cf. questionnaire/specificities.xlsx:Figures (line 6)
 
-# Figure S48: figures/maps/median_gain_2015.pdf, created in code_global/map_GCS_incidence.R
+# Figure S48: figures/maps/median_gain_2015.pdf, created in code_global/map_GCS_incidence.R, already run in App Literature review
 
-# Table S4: tables/gain_gcs.tex, created in code_global/map_GCS_incidence.R
+# Table S4: tables/gain_gcs.tex, created in code_global/map_GCS_incidence.R, already run in App Literature review
 
 
 ##### App Determinants of support #####
@@ -650,5 +650,6 @@ round(quantile(c(share_indifferent_oecd[c(1,2,4),], share_indifferent[10:11,]), 
 # 0%   5%   25%  50%  75%  95%  100%
 # 0.10 0.11 0.15 0.20 0.26 0.32 0.37
 
-Sys.time() - start
+(total_duration <- Sys.time() - start) # 7 min
 beep()
+time_map_gcs
