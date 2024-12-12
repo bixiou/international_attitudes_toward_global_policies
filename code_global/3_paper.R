@@ -1,4 +1,5 @@
 # TODO explain: figures in render.R, conjoint in ..., variables Label()
+start <- Sys.time()
 
 ##### Prepare data and figures #####
 source("2_preparation.R")
@@ -360,7 +361,9 @@ heatmap_multiple(heatmaps_defs[c("foreign_aid_no")])
 
 # Figure S9: figures/maps/gain_gdr_over_gdp_2030.pdf, cf. preparation in code_global/map_GCS_incidence.R
 # Figure S10: figures/maps/diff_gain_gdr_gcs_over_gdp_2030.pdf, cf. preparation in code_global/map_GCS_incidence.R
-source("maps_GCS_incidence.R")
+time_map_gcs <- Sys.time() - start
+source("map_GCS_incidence.R")
+time_map_gcs <- Sys.time() - time_map_gcs
 
 
 ##### App Raw results #####
@@ -646,3 +649,6 @@ desc_table(dep_vars = c("universalist", "nationalist", "egoistic"), weights = NU
 round(quantile(c(share_indifferent_oecd[c(1,2,4),], share_indifferent[10:11,]), c(0, .05, .25, .5, .75, .95, 1), na.rm = T), 2)
 # 0%   5%   25%  50%  75%  95%  100%
 # 0.10 0.11 0.15 0.20 0.26 0.32 0.37
+
+Sys.time() - start
+beep()
