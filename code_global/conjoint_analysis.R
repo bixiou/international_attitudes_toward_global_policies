@@ -31,14 +31,14 @@
 
 
 ###### Prepare EU JavaScript #####
-policies_names <- as.matrix(read.xlsx("../questionnaire/specificities.xlsx", sheet = "Policies", rowNames = T, rows = c(1, 16:41), cols = 1:6))
-policies_names <- policies_names[is.na(as.numeric(row.names(policies_names))),] # NAs by coercion normal
-js_D <- readLines("../conjoint_analysis/9d_D_EU_template.js")
-js_F <- readLines("../conjoint_analysis/9d_F_EU_template.js")
-for (name in row.names(policies_names)) for (c in colnames(policies_names)) js_D <- gsub(paste0(c, '_', name), policies_names[name, c], js_D)
-for (name in row.names(policies_names)) for (c in colnames(policies_names)) js_F <- gsub(paste0(c, '_', name), policies_names[name, c], js_F)
-writeLines(js_D, "../conjoint_analysis/9d_D_EU.js") # (d): no foreign policy in it, GCS vs. nothing instead
-writeLines(js_F, "../conjoint_analysis/9d_F_EU.js") # (r) Directly paste-able into Qualtrics
+# policies_names <- as.matrix(read.xlsx("../questionnaire/specificities.xlsx", sheet = "Policies", rowNames = T, rows = c(1, 16:41), cols = 1:6))
+# policies_names <- policies_names[is.na(as.numeric(row.names(policies_names))),] # NAs by coercion normal
+# js_D <- readLines("../conjoint_analysis/9d_D_EU_template.js")
+# js_F <- readLines("../conjoint_analysis/9d_F_EU_template.js")
+# for (name in row.names(policies_names)) for (c in colnames(policies_names)) js_D <- gsub(paste0(c, '_', name), policies_names[name, c], js_D)
+# for (name in row.names(policies_names)) for (c in colnames(policies_names)) js_F <- gsub(paste0(c, '_', name), policies_names[name, c], js_F)
+# writeLines(js_D, "../conjoint_analysis/9d_D_EU.js") # (d): no foreign policy in it, GCS vs. nothing instead
+# writeLines(js_F, "../conjoint_analysis/9d_F_EU.js") # (r) Directly paste-able into Qualtrics
 
 
 ##### Import to R #####
@@ -121,55 +121,3 @@ for (v in names(subsamples_pol)) for (c in countries) {  {
   plot(amce[[cv]], xlab = "Average Marginal Component Effect", text.size = 18)
   save_plot (filename = paste0("ca_r", sub(c, "", cv)), folder = paste0('../figures/', c, '/'), width = 1100, height = 500, method='dev', trim = T, format = 'png') 
 } }
-
-
-##### Analysis #####
-# baselines <- list()
-# baselines$attribute <- "level"
-# Amce <- amce(formula_cjoint_specific, ca[["usp"]], cluster = FALSE, weights= NULL, design = design_cjoint_US)
-# Amce <- amce(formula_cjoint_generic, ca[["eup"]], cluster = FALSE, weights= NULL, design = design_cjoint_EU)
-# Amce <- amce(formula_cjoint, ca[[df]], cluster = FALSE, weights= NULL)
-# # Amce <- amce(formula_cjoint, ca_e[!is.na(ca_e$selected),], cluster = FALSE, weights= NULL)
-# summary(Amce)http://127.0.0.1:11371/graphics/09d65b49-3a15-4047-bd65-2542b724f185.png
-# plot(Amce)
-
-plot(amce$all, xlab = "Average Marginal Component Effect", text.size = 18) # TODO! good labels
-save_plot (filename = "ca_r", folder = '../figures/all/', width = 1100, height = 500, method='dev', trim = T, format = 'png') # TODO! solve bug PDF + remove grey
-plot(amce$us1, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r", folder = '../figures/US1/', width = 1100, height = 500, method='dev', trim = T, format = 'png') 
-plot(amce$eu, xlab = "Average Marginal Component Effect", text.size = 18)# TODO! good labels
-save_plot (filename = "ca_r", folder = '../figures/EU/', width = 900, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$FR, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$DE, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r", folder = '../figures/DE/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$ES, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r", folder = '../figures/ES/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$UK, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r", folder = '../figures/UK/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$FR_en, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_en", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$DE_en, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_en", folder = '../figures/DE/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$ES_en, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_en", folder = '../figures/ES/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-
-plot(amce$FR_left, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_left", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
-plot(amce$FR_center, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_center", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png') 
-plot(amce$FR_macron, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_macron", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png') 
-plot(amce$FR_right, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_right", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png') 
-plot(amce$FR_extr_right, xlab = "Average Marginal Component Effect", text.size = 18)
-save_plot (filename = "ca_r_extr_right", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png') 
-
-plot(amce$usp) # GCS is foreign1
-plot(amce$eup)
-plot(amce$ep)
-plot(amce$FR, text.size = 12)
-plot(amce$DE)
-plot(amce$ES)
-plot(amce$UK)
-summary(amce$usp)

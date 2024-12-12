@@ -1,13 +1,12 @@
 # TODO explain: figures in render.R, conjoint in ..., variables Label()
 
 ##### Prepare data and figures #####
-# source("preparation.R")
-# source("render.R")
-# save.image(".RData")
+source("2_preparation.R")
+save.image("after_preparation.RData")
 
 
 ##### Load prepared data #####
-load(".RData")
+load("after_preparation.RData")
 
 # Figure 1: questionnaire/survey_flow-simple.pdf
 
@@ -324,8 +323,19 @@ cat(sub("\\end{tabular}", "\\end{tabular}}", sub("\\centering", "\\makebox[\\tex
                      col.names = c("Effect", "Obs.", "t", "P-value", "95\\% C.I.")), # "Country; Policy", 
                  collapse="\n"), fixed = T), fixed = T), file = "../tables/amce.tex") 
 
-# Figure S2: figures/[US1, FR, DE, UK, ES]/ca_r.png
-# Created in code_global/conjoint_analysis.R (this files also contains instructions to reproduce/code the conjoint analysis)
+# Figure S2: figures/[US1, FR, DE, UK, ES]/ca_r[_en].png
+# Cf. also code_global/conjoint_analysis.R to reproduce/code the conjoint analysis
+plot(amce$FR_en, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r_en", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
+plot(amce$DE_en, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r_en", folder = '../figures/DE/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
+plot(amce$ES_en, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r_en", folder = '../figures/ES/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
+plot(amce$UK, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r", folder = '../figures/UK/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
+plot(amce$us1, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r", folder = '../figures/US1/', width = 1100, height = 500, method='dev', trim = T, format = 'png') 
+
 
 # Figure S3: figures/country_comparison/conjoint_left_ag_b_binary_positive.pdf
 heatmap_multiple(heatmaps_defs[c("conjoint_left_ag_b_binary")]) 
@@ -347,9 +357,10 @@ heatmap_multiple(heatmaps_defs[c("foreign_aid_no")])
 
 
 ##### App Literature review #####
-# Figure S9: figures/maps/gain_gdr_over_gdp_2030.pdf
-# Figure S10: figures/maps/diff_gain_gdr_gcs_over_gdp_2030.pdf
-# Maps created in code_global/map_GCS_incidence.R
+
+# Figure S9: figures/maps/gain_gdr_over_gdp_2030.pdf, cf. preparation in code_global/map_GCS_incidence.R
+# Figure S10: figures/maps/diff_gain_gdr_gcs_over_gdp_2030.pdf, cf. preparation in code_global/map_GCS_incidence.R
+source("maps_GCS_incidence.R")
 
 
 ##### App Raw results #####
@@ -367,7 +378,13 @@ heatmap_multiple(heatmaps_defs[c("list_exp")])
 # Figure S15: figures/country_comparison/conjoint_ab_all_positive.pdf
 heatmap_multiple(heatmaps_defs[c("conjoint_ab_all")]) 
 
-# Figure S16: figures/[country]/ca_r.png, created in code_global/conjoint_analysis.R
+# Figure S16: figures/[country]/ca_r.png
+plot(amce$FR, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r", folder = '../figures/FR/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
+plot(amce$DE, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r", folder = '../figures/DE/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
+plot(amce$ES, xlab = "Average Marginal Component Effect", text.size = 18)
+save_plot (filename = "ca_r", folder = '../figures/ES/', width = 1100, height = 500, method='dev', trim = T, format = 'png')
 
 # Figure S17: figures/country_comparison/gcs_important_positive.pdf
 heatmap_multiple(heatmaps_defs[c("gcs_important")]) 
@@ -468,7 +485,7 @@ heatmap_wrapper(vars = heatmaps_defs$main_all$vars, data = all, labels = heatmap
 # Figure S47: questionnaire/survey_flow-combined.pdf, created on questionnaire/survey_flow.pptx
 
 
-##### Net gains from the Global Climate Scheme2073 #####
+##### Net gains from the Global Climate Scheme #####
 # cf. questionnaire/specificities.xlsx:Figures (line 6)
 
 # Figure S48: figures/maps/median_gain_2015.pdf, created in code_global/map_GCS_incidence.R

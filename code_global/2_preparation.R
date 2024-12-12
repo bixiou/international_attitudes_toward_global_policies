@@ -3,8 +3,8 @@
 # TODO sources quotas, national quotas incl. vote
 # TODO check vote
 
-source(".Rprofile")
-source("relabel_rename.R")
+source("0_Rprofile.R")
+source("1_relabel_rename.R")
 # source("conjoint_analysis.R")
 # Our panelist is Bilendi/Respondi. Their partner panelist in the U.S. is Prodedge. 
 
@@ -40,6 +40,7 @@ foreign_aid_actual <- c(.8, 1.3, .5, 1.7, .4)
 names(countries_names) <- names(foreign_aid_actual) <- countries <- c("FR", "DE", "ES", "UK", "US")
 names(countries) <- countries_names
 countries_EU <- countries[1:4]
+countries_eu <- c(countries_EU, "Eu" = "EU")
 major_candidates <- minor_candidates <- list()
 
 
@@ -820,7 +821,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
       for (i in 1:5) {
         e$conjoint_r_type[e[[paste0("F-1-1-", i)]] %in% policies.names["foreign1",]] <- temp[e[[paste0("F-1-1-", i)]] %in% policies.names["foreign1",]] <- "A"
         e$conjoint_r_type[e[[paste0("F-1-2-", i)]] %in% policies.names["foreign1",]] <- "B" }
-      e$conjoint_r_type[e$conjoint_r_type == "B" & temp == A] <- "Both"
+      e$conjoint_r_type[e$conjoint_r_type == "B" & temp == "A"] <- "Both"
       label(e$conjoint_r_type) <- "conjoint_r_type: None/A/B/Both Which candidate includes GCS in their program in conjoint_left_a_b"
       e$conjoint_r <- e$conjoint_left_a_b == e$conjoint_r_type
       e$conjoint_r[e$conjoint_r_type %in% c("None", "Both")] <- NA
@@ -1253,9 +1254,6 @@ us1a <- prepare(country = "US1", weighting = FALSE, exclude_speeder = F, only_fi
 us2a <- prepare(country = "US2", weighting = FALSE, exclude_speeder = F, only_finished = F, exclude_screened = F)
 eua <- prepare(country = "EU", weighting = FALSE, exclude_speeder = F, only_finished = F, exclude_screened = F)
 
-# MEP sample
-e <- mep <- prepare(country = "MEP", only_finished = FALSE, exclude_speeder = FALSE, incl_quality_fail = T, weighting = FALSE, define_var_lists = FALSE)
-
 # Pilots
 us1p <- prepare(country = "US1", wave = "pilot", weighting = FALSE)
 us2p <- prepare(country = "US2", wave = "pilot", weighting = FALSE)
@@ -1290,7 +1288,6 @@ covariates <- c("country_name", "income_factor", "post_secondary", "age_factor",
 
 ##### Create Raw results appendices #####
 # # (don't forget instructions in comments)
-# countries_eu <- c(countries_EU, "Eu" = "EU")
 # names_countries_eu <- setNames(names(countries_eu), countries_eu)
 # country_eu <- setNames(c("French", "German", "Spanish", "British", "[own country]"), countries_eu)
 # c <- "EU"
@@ -2022,3 +2019,6 @@ barresN_vote_defs <- fill_barres(c(main_outcomes, "foreign_aid_raise_support", "
 barresN_age_defs <- fill_barres(c(main_outcomes, "foreign_aid_raise_support"), list(), along = "age_factor")
 barresN_income_defs <- fill_barres(c(main_outcomes, "foreign_aid_raise_support"), list(), along = "income_character")
 
+
+##### Prepare conjoint analysis #####
+source("conjoint_analysis.R")
