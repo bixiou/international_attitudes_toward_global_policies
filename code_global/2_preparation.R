@@ -57,18 +57,6 @@ major_candidates <- minor_candidates <- list()
   "EU_urbanity" = c("Cities", "Towns and suburbs", "Rural"),
   "wealth" = paste0("Q", 1:5),
   "US_urban" = c(TRUE, FALSE)#,
-  # "college_OECD" = c("College Degree", "No college"),
-  # "employment" = c(TRUE, FALSE),
-  # "diploma" = c("No secondary", "Vocational", "High school", "College"), # "FR_education" = c("Aucun diplôme ou brevet", "CAP ou BEP", "Baccalauréat", "Supérieur"),
-  # "US_core_metropolitan" = c(FALSE, TRUE),
-  # "FR_region" = c("autre", "IDF", "Nord-Est", "Nord-Ouest", "Sud-Est", "Sud-Ouest"),
-  # "FR_diploma" = c("Aucun diplôme ou brevet", "CAP ou BEP", "Baccalauréat", "Supérieur"),
-  # "FR_CSP" = c("Inactif", "Ouvrier", "Cadre", "Indépendant", "Intermédiaire", "Retraité", "Employé", "Agriculteur"),
-  # "FR_region9" = c("autre","ARA", "Est", "Nord", "IDF", "Ouest", "SO", "Occ", "Centre", "PACA"),
-  # "UK_urban_category" = c("Rural", "City_Town", "Large_urban"),
-  # "ES_region" = c("East", "Center",  "South", "North", "North-West"),
-  # "DE_region" = c("Northern", "Western", "Central", "Eastern", "Southern"),
-  # "DE_urban_category" = c("Rural", "Towns_and_Suburbs", "Cities"),
 )
   
   quotas <- list("EU" = c("gender", "income_quartile", "age", "diploma_25_64", "country", "urbanity"),
@@ -122,9 +110,6 @@ remove_id <- function(file, folder = "../data/") {
   data <- data[,which(!(names(data) %in% c("PSID", "ResponseId", "PID", "tic")))]
   write_csv(data, filename, na = "")
   file.remove(filename_copy)
-  # data <- read_csv(filename) # the three commented lines worked well for all .csv except SK, don't know why. Maybe retry later to put them back
-  # data <- data[,which(!(names(data) %in% c("PSID", "ResponseId", "PID")))]
-  # write_csv(data, filename, na = "")
 } # for (file in c("US_pilot", "US_pilot2", "US_pilot3", "US", "DK", 'FR')) remove_id(file)
 
 relabel_and_rename <- function(e, country, wave = NULL) {
@@ -152,11 +137,6 @@ relabel_and_rename <- function(e, country, wave = NULL) {
   return(e)
 }
 
-# 26% Les pays pauvres s'en sortiront mieux par eux-mêmes qu'avec notre aide
-# 37% Je serais favorable si l'aide allait directement aux plus pauvres, et pas aux États
-# 26% Je serais favorable si tous les pays riches contribuaient autant que la France
-# 33% La dépense publique doit servir en priorité aux services publics et aux Français
-# 10% Je serais favorable avec un montant plus faible : 2% c'est trop
 weighting <- function(e, country, printWeights = T, variant = NULL, min_weight_for_missing_level = F, combine_age_50 = FALSE, trim = T) {
   if (!missing(variant)) print(variant)
   vars <- quotas[[paste0(c(country, variant), collapse = "_")]]
@@ -203,20 +183,9 @@ weighting <- function(e, country, printWeights = T, variant = NULL, min_weight_f
 }
 
 prepare <- function(incl_quality_fail = FALSE, exclude_speeder=TRUE, exclude_screened=TRUE, only_finished=TRUE, only_known_agglo=T, duration_min=0, country = "US", wave = NULL, weighting = TRUE, replace_brackets = FALSE, zscores = T, zscores_dummies = FALSE, remove_id = FALSE, efa = FALSE, combine_age_50 = T, define_var_lists = T) { #(country!="DK") # , exclude_quotas_full=TRUE
-  # if (country == "US") {
-  #   if (wave == "pilot1") e <- read_csv("../data/US_pilot.csv") 
-  #   else if (wave == "pilot2") e <- read_csv("../data/US_pilot2.csv") 
-  #   else if (wave == "pilot3") e <- read_csv("../data/US_pilot3.csv") 
-  #   else if (wave == "full") e <- read_csv("../data/US.csv") 
-  # } else if (country == "DK") e <- read_csv("../data/DK.csv") 
   filename <- paste0(c(country, wave), collapse="_")
   file <- paste0("../data/", filename, ".csv")
-  # if (filename != "SA") remove_id(filename)
-  # if (missing(remove_id)) {
-  #   e <- read_csv(file)
-  #   remove_id <- "PSID" %in% names(e)
-  # }
-  if (remove_id) remove_id(filename)
+ if (remove_id) remove_id(filename)
   if (replace_brackets) {
     data <- readLines(file)
     data <- gsub("[Country]", Country_names[country], data, fixed = T)
@@ -245,11 +214,7 @@ prepare <- function(incl_quality_fail = FALSE, exclude_speeder=TRUE, exclude_scr
     if (("vote_us" %in% names(e) & (sum(e$vote_us=="PNR/no right")!=0)) | ("vote" %in% names(e))) e$weight_vote <- weighting(e, sub("[0-9]+[a-z]*", "", country), variant = "vote")
     if (country == "EU") { for (c in countries_EU) e$weight_country[e$country == c] <- weighting(e[e$country == c,], c) } else e$weight_country <- e$weight
   }
-    
-  # e$left_right_na <- as.numeric(e$left_right)
-  # e$left_right_na[e$indeterminate == T] <- wtd.mean(e$left_right, weights = e$weight)
-  # } else e <- create_education(e, country, only = TRUE)
-  
+
   if ("attention_test" %in% names(e)) {
     e$failed_test <- no.na(e$attention_test) != "A little"
     label(e$failed_test) <- "failed_test: Failed the attention_test"
@@ -267,11 +232,7 @@ prepare <- function(incl_quality_fail = FALSE, exclude_speeder=TRUE, exclude_scr
     e$stayed <- !e$dropout & no.na(e$excluded) != "QuotaMet"
     label(e$stayed) <- "stayed: T/F quotas are allowed and do not drop out"
   }
-  # e$sample <- "a"
-  # e$sample[e$finished=="True"] <- "e"
-  # e$sample[e$finished=="True" & n(e$duration) > duration_min] <- "p"
-  # e$sample[e$finished=="True" & n(e$duration) > duration_min & e$excluded==""] <- "r"
-  
+
   return(e)
 }
 
@@ -408,14 +369,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
     temp[is.na(e[j][[1]])] <- NA
     e[j][[1]] <- as.item(temp, labels = structure(c(0,-0.1,1), names = c("No","PNR","Yes")),
                          missing.values = c("",NA,"PNR"), annotation=attr(e[j][[1]], "label"))
-    # e[j][[1]] <- as.item(as.character(e[j][[1]]), labels = structure(yes_no_names, names = c("NA","No","PNR","Yes")),
-    #             missing.values = c("","PNR"), annotation=attr(e[j][[1]], "label"))
   }
-  
-  # for (j in intersect(c("region", "education", "employment_status", "vote" 
-  # ), names(e))) {
-  #   e[j][[1]] <- as.item(as.factor(e[j][[1]]), missing.values = c("PNR", "", NA), annotation=paste(attr(e[j][[1]], "label")))
-  # }
   
   for (j in names(e)) {
     if ((grepl('race_|home_|foreign_aid_raise_how|foreign_aid_reduce_how|foreign_aid_condition|foreign_aid_no_|ets2_no_', j) & !(grepl('_other$|order_', j))) | grepl('how_other', j)) {
@@ -582,8 +536,6 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
     e$vote_participation <- as.item(as.character(e$vote_participation), missing.values = 'PNR', annotation=Label(e$vote_participation))
     label(e$vote_all) <- "vote_all: What the respondent has voted or would have voted in the last election, combining vote_[country]_voters and vote_[country]_non_voters."
     label(e$vote_agg) <- paste0("vote_agg: What the respondent has voted or would have voted in the last election, lumping minor candidates (with less than ", major_threshold, "% of $vote) into 'Other'. Build from $vote that combines $vote_[country]_voters and $vote_[country]_non_voters.")
-    # e$vote_all <- as.item(as.character(e$vote_all), missing.values = 'PNR', annotation="vote_all: What the respondent has voted or would have voted in the last election, combining vote_[country]_voters and vote_[country]_non_voters.")
-    # e$vote_agg <- as.item(as.character(e$vote_agg), missing.values = 'PNR', annotation=paste0("vote_agg: What the respondent has voted or would have voted in the last election, lumping minor candidates (with less than ", major_threshold, "% of $vote) into 'Other'. Build from $vote that combines $vote_[country]_voters and $vote_[country]_non_voters."))
     e$voted <- e$vote_participation == 'Yes'
     label(e$voted) <- "voted: Has voted in last election: Yes to vote_participation."
     major_candidates <<- major_candidates
@@ -1227,12 +1179,6 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
   e$wrong_language <- (e$country == "US" & e$language != "EN") | (e$country == "DE" & e$language != "DE") | (e$country == "FR" & e$language != "FR") | (e$country == "ES" & e$language != "ES-ES") | (e$country == "UK" & e$language != "EN-GB")
   label(e$wrong_language) <- "wrong_language: T/F The language does not correspond to the respondent's country (including Spanish in the U.S.)."
   }
-  
-  # count_IP <- rle(as.vector(sort(e$ip)))
-  # e$number_same_ip <- count_IP$lengths[match(e$ip, count_IP$values)]
-  # e$duplicate_ip <- e$number_same_ip > 1
-  # label(e$number_same_ip) <- "number_same_ip: Number of respondents with the same IP."
-  # label(e$duplicate_ip) <- "duplicate_ip: T/F The respondent's IP is used by other respondents."
   
   e$n <- paste0(country, ifelse(wave == "pilot", "p_", "_"), 1:nrow(e))
   
@@ -1910,40 +1856,21 @@ fill_barres <- function(list_var_list = NULL, plots = barres_defs, df = e, count
 
 
 ##### barres_defs #####
-# define_barres_defs <- function(df = e) {
 barres_defs <- list( # It cannot contained unnamed strings (e.g. it can contain "var" = "var" but not simply "var")
   "understood_each" = list(vars = variables_understood[1:3], width = 850), # 1480 
-  # "problem" = list(width = 850), # 1335
-  # "support_binary" = list(width = 850), # 770
-  # "support_likert" = list(width = 850), # 1275
   "negotiation" = list(width = 940), 
   "group_defended" = list(width = 1000), # 1250
   "group_defended_agg" = list(width = 900), 
   "foreign_aid_raise_support" = list(width = 940), 
-  # "global_policies" = list(width = 850), # 1275
-  # "other_policies" = list(width = 850), # 1270
-  # "climate_policies" = list(width = 850), # 1221
-  # "variables_list_exp" = list(width = 500),
   "variables_petition" = list(vars = c("petition_gcs", "petition_nr"), width = 850), # 500
   "variables_donation" = list(vars = c("donation_africa_agg", "donation_nation_agg"), width = 850), # 835
   "foreign_aid_amount" = list(vars = variables_foreign_aid_amount_agg[1:3], width = 850), # 1080
   "belief" = list(vars = variables_belief_agg, width = 850), # 750
-  # "points" = list(vars = variables_points_agg, width = 850, sort = FALSE), # 750 
   "points_mean" = list(vars = variables_points_us_agg, width = 850, sort = FALSE, add_means = T, show_legend_means = T, transform_mean = function(x) return(x/100)), # 1080 points_us
   "points" = list(vars = variables_points_us_agg, width = 850, sort = FALSE), # 1080 points_us
   "share_policies_supported" = list(vars = "share_policies_supported_agg", width = 850), # 950
   "understood_score" = list(vars = variables_understood[4], width = 850), # 650
-  # "gcs_important" = list(vars = variables_gcs_important, conditions = c("", ">= 1")),
-  # "support_binary" = list(vars = variables_support_binary, conditions = ">= 1"),
-  # "petition" = list(vars = variables_petition, conditions = ">= 1"),
   "conjoint" = list(vars = variables_conjoint_binary, width = 850, sort = FALSE), # 900
-  # "conjoint_a" = list(vars = variables_conjoint_a_binary, conditions = ">= 1"),
-  # "conjoint_b" = list(vars = variables_conjoint_b_binary, conditions = ">= 1"),
-  # "conjoint_c" = list(vars = variables_conjoint_c_binary, conditions = ">= 1"),
-  # "conjoint_d" = list(vars = variables_conjoint_d_binary, conditions = ">= 1"),
-  # "duration" = list(vars = variables_duration, conditions = ""),
-  # "foreign_aid_raise" = list(vars = variables_foreign_aid_raise, conditions = ">= 1"),
-  # "foreign_aid_reduce" = list(vars = variables_foreign_aid_reduce, conditions = ">= 1"),
   "support_binary_all" = list(showLegend = FALSE), 
   "gcs_support" = list(vars = "gcs_support", rev = T, rev_color = F), 
   "global_national_tax" = list(vars = c("national_tax_support", "global_tax_support"), sort = FALSE),
@@ -1970,8 +1897,6 @@ vars_barres <- c("ets2_support", "ets2_no", "other_policies", "climate_policies"
                  "vote_agg", "vote_participation", "interested_politics", "donation_charities", "involvement_govt", "left_right", "duration_agg") 
 
 barres_defs <- fill_barres(vars_barres, barres_defs) # , df = us1
-# return(barres_defs) }
-# barres_defs$foreign_aid_no
 
 vars_barresN <- c("group_defended_agg2", "foreign_aid_raise_support", "global_tax_support", "national_tax_support", "global_tax_global_share", "global_tax_sharing",
                   "foreign_aid_belief_agg", "foreign_aid_preferred_info_agg", "foreign_aid_preferred_no_info_agg", "donation_charities", "interested_politics", 
