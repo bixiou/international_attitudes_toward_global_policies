@@ -250,7 +250,7 @@ relabel_and_rename_EU <- function(e) {
     "finished",
     "excluded",
     "duration",
-    "click_reminder", # TODO
+    "click_reminder", 
     "Country",
     "urban_category",
     "region",
@@ -479,7 +479,7 @@ relabel_and_rename_US2 <- function(e) {
     "foreign_aid_reduce_how_corporations",
     "foreign_aid_reduce_how_income_tax",
     "foreign_aid_reduce_how_deficit",
-    "foreign_aid_reduce_how_order_defense", # TODO
+    "foreign_aid_reduce_how_order_defense", 
     "foreign_aid_reduce_how_order_pensions",
     "foreign_aid_reduce_how_order_healthcare",
     "foreign_aid_reduce_how_order_welfare",
@@ -534,7 +534,7 @@ relabel_and_rename_US2 <- function(e) {
     "duration_feedback",
     "Q58_Click",
     "comment_field",
-    "poverty_field", # TODO
+    "poverty_field", 
     "survey_biased",
     "interview",
     "iat_rp1",
@@ -1282,7 +1282,7 @@ relabel_and_rename_US2pilot <- function(e) {
     "foreign_aid_reduce_how_corporations",
     "foreign_aid_reduce_how_income_tax",
     "foreign_aid_reduce_how_deficit",
-    "foreign_aid_reduce_how_order_defense", # TODO
+    "foreign_aid_reduce_how_order_defense", 
     "foreign_aid_reduce_how_order_pensions",
     "foreign_aid_reduce_how_order_healthcare",
     "foreign_aid_reduce_how_order_welfare",
@@ -1343,7 +1343,7 @@ relabel_and_rename_US2pilot <- function(e) {
     "duration_feedback",
     "Q58_Click",
     "comment_field",
-    "poverty_field", # TODO
+    "poverty_field", 
     "survey_biased",
     "interview",
     "iat_rp1",
@@ -1651,7 +1651,7 @@ relabel_and_rename_EUpilot <- function(e) {
     "finished",
     "excluded",
     "duration",
-    "click_reminder", # TODO
+    "click_reminder", 
     "Country",
     "urban_category",
     "region",

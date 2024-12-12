@@ -1,7 +1,3 @@
-# TODO! merge D and F (by defining GCS/- as the levels of foreign).
-# TODO? put in preparation
-# TODO! graph PDF
-
 # Design of the programs:
 # Policies are specific to each country. Here is the number of policies in US/EU (to which one should add "-" to each set except for tax_system in D which is {nR; nR + Wealth tax}): 
 # nb policies US/EU: econ_issues 4/4, society_issues 3/2, climate_pol 3/3, tax_system 3/2 (except for D), foreign_policy 5/5 (0 for D)
@@ -81,7 +77,7 @@ for (df in c("us1", "eu", "all")) { # "usp", "eup", "ep"
 }
 # ca_e <- read.qualtrics("../data/EUn.csv", responses = "Q30", covariates = variables_conjoint_r_levels, ranks = NULL, new.format = T) 
 for (c in countries_EU) {
-  print(c)  # TODO break long string
+  print(c)  
   amce[[c]] <- amce(formula_cjoint_generic, ca$eu[ca$eu$country == sub("_.*", "", c),], design = design_cjoint_EU, cluster = FALSE, weights= NULL)
   for (i in names(amce[[c]]$user.levels)) if (amce[[c]]$user.levels[[i]] %in% row.names(policies.names)) amce[[c]]$user.levels[[i]] <- policies.names[amce[[c]]$user.levels[[i]], sub("_.*", "", c)]
   for (i in names(amce[[c]]$user.names)) if (amce[[c]]$user.names[[i]] %in% row.names(policies.names)) amce[[c]]$user.names[[i]] <- policies.names[amce[[c]]$user.names[[i]], sub("_.*", "", c)]
@@ -95,13 +91,11 @@ for (c in c("FR", "DE", "ES")) {
 for (c in c("all", "eu")) {
   for (i in names(amce[[c]]$user.names)) if (amce[[c]]$user.names[[i]] %in% row.names(policies.names)) amce[[c]]$user.names[[i]] <- policies.names[amce[[c]]$user.names[[i]], "US"]
   for (i in c("climatepolclimate3", "taxsystemtax1", "foreignpolicyforeign1", "foreignpolicyforeign2", "foreignpolicyforeign3", "foreignpolicyforeign4")) amce[[c]]$user.levels[[i]] <- policies.names[amce[[c]]$user.levels[[i]], "US"]
-  amce[[c]]$user.levels[["econissuesecon2"]] <- "[Higher minimum wage] (DE: Bürgerversicherung)" # TODO! switch econ 1 with 4 in UK, ES and 3 with 4 in US and write "[Higher spending on public services like health]"
+  amce[[c]]$user.levels[["econissuesecon2"]] <- "[Higher minimum wage] (DE: Bürgerversicherung)" 
   amce[[c]]$user.levels[["climatepolclimate2"]] <- if (c == "eu") "Thermal insulation plan" else "[Thermal insulation plan] (except US: trillion investment in transport and insulation)"
   amce[[c]]$user.levels[["taxsystemtax2"]] <- "[Wealth tax] (ES: raise income tax above 100k€/year)"
 }
-# fr_left <- eu[eu$country=='FR' & eu$vote=="Left",]
-# fr_pnr <- eu[eu$country=='FR' & grepl("Non-voter", eu$vote),]
-# TODO! do the same (by vote) in all and each country
+
 subsamples_pol_fr <- c("FR_left" = "Mélenchon|Jadot|Hidalgo|Roussel|Poutou|Arthaud", "FR_center" = "Macron|Mélenchon|Jadot|Hidalgo|Roussel", "FR_macron" = "Macron", "FR_right" = "Macron|Pécresse|Lassalle", "FR_extr_right" = "Le Pen|Zemmour|Dupont-Aignan")
 for (c in names(subsamples_pol_fr)) {
   print(c)  

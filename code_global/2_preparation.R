@@ -1,8 +1,3 @@
-# Consistency: increase/reduce aid for those with the info + later question; petition_yes_support_no; duplicate_ip
-# TODO order_
-# TODO sources quotas, national quotas incl. vote
-# TODO check vote
-
 source("0_Rprofile.R")
 source("1_relabel_rename.R")
 # source("conjoint_analysis.R")
@@ -242,10 +237,8 @@ prepare <- function(incl_quality_fail = FALSE, exclude_speeder=TRUE, exclude_scr
   if (exclude_screened & !incl_quality_fail) { e <- e[is.na(e$excluded),] }
   if (exclude_speeder) e <- e[as.numeric(as.vector(e$duration)) > duration_min,] # & !incl_quality_fail
   if (only_finished & !incl_quality_fail) e <- e[e$finished==1,] 
-  # if (only_finished | incl_quality_fail) { # TODO: le faire marcher même pour les autres
   e <- convert(e, country = country, wave = wave, weighting = weighting, zscores = zscores, zscores_dummies = zscores_dummies, efa = efa, combine_age_50 = combine_age_50, only_finished = only_finished, define_var_lists = define_var_lists)
   e <- e[,!duplicated(names(e))]
-  # if (!incl_quality_fail) e <- e[e$attention_test == T, ] # TODO!
   if (weighting) {
     e$weight <- weighting(e, sub("[0-9p]+", "", country))
     e$weight_all <- weighting(e, sub("[0-9p]+", "", country), variant = "all")
@@ -405,7 +398,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
   for (i in intersect(c(variables_duration, "hh_size", "Nb_children__14", "zipcode", variables_donation, variables_belief, variables_belief_mep, variables_list_exp, variables_points, "global_tax_global_share" #, "age"
   ), names(e))) {
     lab <- label(e[[i]])
-    e[[i]] <- as.numeric(as.vector( gsub("[^0-9\\.]", "", e[[i]]))) # /!\ this may create an issue with UK zipcodes as it removes letters
+    e[[i]] <- as.numeric(as.vector( gsub("[^0-9\\.]", "", e[[i]]))) 
     label(e[[i]]) <- lab
   }
   for (v in intersect(variables_duration, names(e))) e[[v]] <- e[[v]]/60
@@ -504,7 +497,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
   # ISCED_EU <- c("0-1", "2", "3 pro basic", "3 pro advanced", "3 general", "4-5", "6", "7-8")
   ISCED <- c("0-1", "2", "3.1", "3.2", "3.3", "4-5", "6", "7-8")
   names(ISCED) <- c("Primary school or less", "Eigth grade", "Some high school", "Regular high school diploma/GED or alternative credential", "Some college, no degree", "2-year college degree or associates degree (for example: AA, AS)", "Bachelor's degree (for example: BA, BS)", "Master’s degree or above (MA, MS, MEng, MEd, MSW, MBA, MD, DDS, DVM, LLB, JD, PhD)")
-  e$education <- ISCED[e$education_original] # TODO create variable with shorter names and plot it
+  e$education <- ISCED[e$education_original] 
   label(e$education) <- "education: What is the highest level of education you have completed? /!\ For EU, the values don't correspond to the responses. To see the correspondence between values and responses in each country, cf. specificities.xlsx$Education"
   e$diploma[e$education %in% c("0-1", "2")] <- 1 
   e$diploma[grepl("3", e$education)] <- 2 
@@ -768,7 +761,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
     
     e$score_understood <- as.numeric(e$nr_understood + e$gcs_understood + e$both_understood)
     label(e$score_understood) <- "score_understood: [0-3] Number correct answers to understanding questions (nr/gcs/both_understood)."
-    e$z_score_understood <- (e$score_understood - mean(e$score_understood)) / sd(e$score_understood) # TODO weighted
+    e$z_score_understood <- (e$score_understood - mean(e$score_understood)) / sd(e$score_understood) 
     label(e$z_score_understood) <- "z_score_understood: Normalized score_understood."
     
     if ("donation_nation" %in% names(e) & sum(!is.na(e$donation_nation)) != 0) {
@@ -881,7 +874,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
     if ("interested_politics" %in% names(e)) e$interested_politics <- as.item(temp, labels = structure(c(-2:2),  names = c(text_intensity)), annotation=Label(e$interested_politics))
     
     if ("group_defended" %in% names(e)) {
-      e$group_defended_original <- e$group_defended # TODO! assign all but one "My town" to "My State" in US.
+      e$group_defended_original <- e$group_defended 
       temp <- 0*grepl("myself", e$group_defended) + 1*grepl("relatives", e$group_defended) + 2*grepl("town|State", e$group_defended) + 3*grepl("religion", e$group_defended) + 4*grepl("Americans", e$group_defended) + 5*grepl("European", e$group_defended) + 6*grepl("Humans", e$group_defended) + 7*grepl("animals", e$group_defended)
       e$group_defended <- as.item(temp, labels = structure(0:7, names = c("Family and self", "Relatives", "Region, U.S. State or town", "Culture or religion", "Fellow citizens", "Europeans", "Humans", "Sentient beings")), annotation = Label(e$group_defended))
       e$nationalist <- e$group_defended == 4
@@ -1011,7 +1004,6 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
       # FR: middle class always pays (squeezed middle), we'll need to consume less, avoids migration, future for our children, 
       # ES: better world, better for biodiversity or nature
       # UK: 
-      # TODO! (add cost, poorest humans, change doctrine): US2 A-ZZ, UK A-GH
       
       # Pépites:
       # US: HI, GI, JX, OL, 3E, 3EG, 3GM, 3GU (!), 3IT, 3JR, 2ED, 2NJ
@@ -1228,7 +1220,7 @@ convert <- function(e, country, wave = NULL, weighting = T, zscores = T, zscores
   for (v in intersect(variables_points, names(e))) e[[paste0(v, "_agg")]] <- agg_thresholds(e[[v]], c(0, 0, 8, 14, 18, 25, 50, 100), shift = 1)
   for (v in intersect(c("share_policies_supported"), names(e))) e[[paste0(v, "_agg")]] <- agg_thresholds(e[[v]], c(0, 0, 0.25, 0.5, 0.75, 1, 1), shift = 0.01)
   for (v in intersect(variables_foreign_aid_amount, names(e))) e[[paste0(v, "_agg")]] <- agg_thresholds(e[[v]], c(-Inf, 0.2, 0.5, 1, 1.7, 2.6, 6, Inf), shift = 0.1)
-  for (v in intersect(variables_belief, names(e))) e[[paste0(v, "_agg")]] <- agg_thresholds(e[[v]], c(0, 20, 40, 60, 80, 100), shift = 1) # TODO add actual value
+  for (v in intersect(variables_belief, names(e))) e[[paste0(v, "_agg")]] <- agg_thresholds(e[[v]], c(0, 20, 40, 60, 80, 100), shift = 1) 
   
   if (country == "EU") label(e$foreign_aid_no_nation_first) <- gsub("American", "[country]", Label(e$foreign_aid_no_nation_first))
   
@@ -1730,7 +1722,7 @@ fill_heatmaps <- function(list_var_list = NULL, heatmaps = heatmaps_defs, condit
     if (!is.list(list_var_list[[name]])) list_var_list[[name]] <- list(vars = list_var_list[[name]])
     var_list <- list_var_list[[name]]
     if (!name %in% names(heatmaps)) heatmaps[[name]] <- var_list
-    else for (key in names(var_list)) heatmaps[[name]][[key]] <- var_list[[key]] # TODO? if (!key %in% names(heatmaps[[name]])) ?
+    else for (key in names(var_list)) heatmaps[[name]][[key]] <- var_list[[key]] 
   }
   # We complete the missing fields of heatmaps 
   for (name in names(heatmaps)) {
@@ -1837,7 +1829,6 @@ heatmap_multiple <- function(heatmaps = heatmaps_defs, data = e, trim = FALSE, w
 ##### Barres #####
 data_list_exp <- function(data) return(cbind(t(t(c(0, 0, dataN("list_exp_l", data, miss = F)))), t(t(c(0, dataN("list_exp_gl", data, miss = F)))), t(t(c(0, dataN("list_exp_rl", data, miss = F)))), dataN("list_exp_rgl", data, miss = F)))
 
-# TODO! option to not display main label from barresN
 barres_multiple <- function(barres = barres_defs, df = e, folder = "../figures/country_comparison/", print = T, export_xls = FALSE, trim = T, method = 'orca', format = 'pdf', weights = T) {
   if (missing(folder)) folder <- automatic_folder(along = "country", data = df, several = "all")
   for (def in barres) {
@@ -1925,10 +1916,10 @@ barres_defs <- list( # It cannot contained unnamed strings (e.g. it can contain 
   # "problem" = list(width = 850), # 1335
   # "support_binary" = list(width = 850), # 770
   # "support_likert" = list(width = 850), # 1275
-  "negotiation" = list(width = 940), # TODO! 1200
+  "negotiation" = list(width = 940), 
   "group_defended" = list(width = 1000), # 1250
-  "group_defended_agg" = list(width = 900), # TODO! 1150
-  "foreign_aid_raise_support" = list(width = 940), # TODO! 1425
+  "group_defended_agg" = list(width = 900), 
+  "foreign_aid_raise_support" = list(width = 940), 
   # "global_policies" = list(width = 850), # 1275
   # "other_policies" = list(width = 850), # 1270
   # "climate_policies" = list(width = 850), # 1221
@@ -1937,7 +1928,7 @@ barres_defs <- list( # It cannot contained unnamed strings (e.g. it can contain 
   "variables_donation" = list(vars = c("donation_africa_agg", "donation_nation_agg"), width = 850), # 835
   "foreign_aid_amount" = list(vars = variables_foreign_aid_amount_agg[1:3], width = 850), # 1080
   "belief" = list(vars = variables_belief_agg, width = 850), # 750
-  # "points" = list(vars = variables_points_agg, width = 850, sort = FALSE), # 750 TODO! average
+  # "points" = list(vars = variables_points_agg, width = 850, sort = FALSE), # 750 
   "points_mean" = list(vars = variables_points_us_agg, width = 850, sort = FALSE, add_means = T, show_legend_means = T, transform_mean = function(x) return(x/100)), # 1080 points_us
   "points" = list(vars = variables_points_us_agg, width = 850, sort = FALSE), # 1080 points_us
   "share_policies_supported" = list(vars = "share_policies_supported_agg", width = 850), # 950
@@ -1956,7 +1947,7 @@ barres_defs <- list( # It cannot contained unnamed strings (e.g. it can contain 
   "support_binary_all" = list(showLegend = FALSE), 
   "gcs_support" = list(vars = "gcs_support", rev = T, rev_color = F), 
   "global_national_tax" = list(vars = c("national_tax_support", "global_tax_support"), sort = FALSE),
-  "global_tax_share" = list(vars = c("global_tax_sharing", "global_tax_more_half", "global_tax_more_30p", "global_tax_more_10p"), sort = FALSE), # TODO make it also a heatmap
+  "global_tax_share" = list(vars = c("global_tax_sharing", "global_tax_more_half", "global_tax_more_30p", "global_tax_more_10p"), sort = FALSE), 
   "vote"= list(miss = T, fr = "PNR/Non-voter"), # non_voters as such, aggregating candidates into 3 categories
   "vote_all"= list(rev = T), # hypothetical votes for non_voters
   "vote_agg"= list(rev = T), # hypothetical votes for non_voters, aggregating small candidates

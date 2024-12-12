@@ -1,4 +1,3 @@
-# TODO explain: figures in render.R, conjoint in ..., variables Label()
 start <- Sys.time()
 
 ##### Prepare data and figures #####

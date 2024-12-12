@@ -380,7 +380,7 @@ no.na <- function(vec, num_as_char = T, rep = "na") {
   } else if (is.logical(c(vec, rep))) { replace_na(as.vector(vec), rep)
   } else return(vec)
 }
-decrit <- function(variable, data = e, miss = TRUE, weights = NULL, numbers = FALSE, which = NULL, weight = T) { # TODO!: allow for boolean weights
+decrit <- function(variable, data = e, miss = TRUE, weights = NULL, numbers = FALSE, which = NULL, weight = T) { 
   # if (!missing(data)) variable <- data[[variable]]
   if (is.character(variable) & length(variable)==1) variable <- data[[variable]]
   if (!missing(which)) variable <- variable[which]
@@ -609,7 +609,7 @@ desc_table <- function(dep_vars, filename = NULL, data = e, indep_vars = control
     formula_i <- as.formula(paste(dep_vars[i], "~", paste("(", indep_vars[indep_vars_included[[i]] & covariates_with_several_values(data = df, covariates = indep_vars)], ")", collapse = ' + ')))
     if (logit[i]) {
       models[[i]] <- glm(formula_i, data = df, family = binomial(link='logit'))
-      logit_margin_i <- logitmfx(formula_i, data = df, robust = robust_SE, atmean = atmean)$mfxest # TODO! weights with logit; NB: logitmfx computes White/robust SE when robust_SE == T
+      logit_margin_i <- logitmfx(formula_i, data = df, robust = robust_SE, atmean = atmean)$mfxest 
       coefs[[i]] <- logit_margin_i[,1]
       SEs[[i]] <- logit_margin_i[,2]
     }
@@ -636,15 +636,6 @@ desc_table <- function(dep_vars, filename = NULL, data = e, indep_vars = control
     if (!is.data.frame(data)) data <- data[[1]]
     model_total <- lm(as.formula(paste(dep_vars[1], "~", paste("(", indep_vars[covariates_with_several_values(data = data, covariates = indep_vars)], ")", collapse = ' + '))), data = data)
     indep_labels <- create_covariate_labels(names(model_total$coefficients)[-1], regressors_names = labels_vars, keep = keep, omit = "Constant")
-
-    # i_max <- max_i <- 0
-    # for (i in seq_along(models)) {
-    #   if (length(models[[i]]$coefficients) > max_i) {
-    #     max_i <- length(models[[i]]$coefficients) # TODO!: /!\ pb: won't display the appropriate labels if some coefficients are missing in the regression with most covariates (e.g. due to keep or omit)
-    #     i_max <- i } }
-    # indep_labels <- labels_vars[names(models[[i_max]]$coefficients)[-1]]
-    # names(indep_labels) <- names(models[[i_max]]$coefficients)[-1]
-    # # if (!missing(keep)) indep_labels <- indep_labels[grepl(keep, indep_vars)]
   }
   if (only_mean) mean_above <- T
   table <- do.call(stargazer, c(models, list(out=file_path, header=F, model.numbers = model.numbers,
@@ -719,7 +710,7 @@ same_reg_subsamples <- function(dep.var, dep.var.caption = NULL, covariates = se
     i <- j+1
     if (logit) {
       models[[i]] <- glm(formula_i, data = data_i, family = binomial(link='logit'))
-      logit_margin_i <- logitmfx(formula_i, data = data_i, robust = robust_SE, atmean = atmean)$mfxest # TODO! weights with logit; NB: logitmfx computes White/robust SE when robust_SE == T
+      logit_margin_i <- logitmfx(formula_i, data = data_i, robust = robust_SE, atmean = atmean)$mfxest 
       coefs[[i]] <- logit_margin_i[,1]
       SEs[[i]] <- logit_margin_i[,2]
       if (p_instead_SE) SEs[[i]] <- logit_margin_i[,4]
@@ -842,7 +833,7 @@ representativity_index <- function(weights, digits = 3) { return(round(sum(weigh
 #'     else values <- c(values, "NSP") }
 #'   # if (accord) { values <- c("Pas du tout d'accord", "Pas vraiment d'accord", "Indifférent-e", "Assez d'accord", "Tout à fait d'accord") }
 #'   # else { values <- c("Baisser fortement", "Baisser légèrement", "Maintenir au niveau actuel", "Augmenter légèrement", "Augmenter fortement") }
-#'   # if (miss) { values <- c(values, "NSP (Ne sait pas, ne se prononce pas)")} # TODO: trouver widths pour ceux-là et les mettre
+#'   # if (miss) { values <- c(values, "NSP (Ne sait pas, ne se prononce pas)")} 
 #'   before_par <- par()
 #'   titre <- 0
 #'   if (!is.na(title)) { titre <- 1.5 }
@@ -995,7 +986,7 @@ representativity_index <- function(weights, digits = 3) { return(round(sum(weigh
 #'   # return(as.data.frame(matrice))
 #' }
 data1 <- function(vars, data=e, weights=T) {
-  if (is.null(data[['weight']])) weights <- F # TODO? warning
+  if (is.null(data[['weight']])) weights <- F 
   res <- c()
   for (var in vars) {
     if (weights) { res <- c(res, sum(data[['weight']][which(data[[var]]==TRUE)])/sum(data[['weight']][which(data[[var]]==TRUE | data[[var]]==FALSE)])) }
@@ -1004,10 +995,10 @@ data1 <- function(vars, data=e, weights=T) {
   return( matrix(res, ncol=length(vars)) )
 }
 dataN <- function(var, data=e, miss=T, weights = T, return = "", fr=F, rev=FALSE, rev_legend = FALSE, levels = NULL) {
-  missing_labels <- c("NSP", "PNR", "Non concerné·e", "Included", "Don't know", "PNR or other", "NSP ou autre", "PNR ou autre", "PNR/Non-voter") # TODO: allow for non-standard PNR in a more straightforward way than adding the argument "fr" and putting its value below
+  missing_labels <- c("NSP", "PNR", "Non concerné·e", "Included", "Don't know", "PNR or other", "NSP ou autre", "PNR ou autre", "PNR/Non-voter") 
   if (is.character(fr)) missing_labels <- c(missing_labels, fr)
   weight_var <- if (sum(!is.na(data$weight_country)) == nrow(data) && length(unique(data$country)) == 1) "weight_country" else "weight"
-  if (is.null(data[[weight_var]])) weights <- F # TODO? warning
+  if (is.null(data[[weight_var]])) weights <- F 
   mat <- c()
   if (is.character(data[[var]]) | (is.numeric(data[[var]]) & any(grepl("item", class(data[[var]])))) | is.logical(data[[var]])) v <- as.factor(data[[var]]) # before: !any(...item) instead of any(...item); before before: no is.logical
   else v <- data[[var]]
@@ -1174,7 +1165,7 @@ barresN <- function(vars, along = NULL, df=list(e), labels = NULL, legend=hover,
                     miss=miss, weights = weights, fr=fr, rev=rev, color=color, rev_color = rev_color, hover=hover, sort=F, thin=thin, showLegend=showLegend, export_xls = export_xls, error_margin = error_margin))
     } }
 }
-color <- function(v, grey=FALSE, grey_replaces_last = T, rev_color = FALSE, theme='RdBu') { # TODO! whitout white
+color <- function(v, grey=FALSE, grey_replaces_last = T, rev_color = FALSE, theme='RdBu') { 
   if (is.matrix(v)) n <- nrow(v)
   else if (length(v) > 1) n <- length(v)
   else n <- v # cf. http://research.stowers.org/mcm/efg/R/Color/Chart/ColorChart.pdf
@@ -1409,7 +1400,7 @@ save_plot <- function(plot=NULL, filename = deparse(substitute(plot)), folder = 
         dev.off() }
       else if (format == 'svg') {
         dev.copy(svg, filename = file, width = width/100, height = height/100) # save plot from R (not plotly)
-        dev.off() } # TODO choose width height with PDF
+        dev.off() } 
       else if (format == 'pdf') dev.print(pdf, file = file) # because dev.size('px')[1]/dev.size('in')[1] = 105 , width = width/105, height = height/105
     }
     else {
@@ -1471,7 +1462,7 @@ heatmap_plot <- function(data, type = "full", p.mat = NULL, proportion = T, perc
 }
 heatmap_table <- function(vars, labels = vars, data = e, along = "country_name", special = c(), conditions = c("", ">= 1", "/"), on_control = FALSE, alphabetical = T, export_xls = T, filename = "", sort = FALSE, folder = NULL, weights = T, remove_na = T, transpose = FALSE) {
   # The condition must work with the form: "data$var cond", e.g. "> 0", "%in% c('a', 'b')" work
-  # /!\ We exclude NA before computing the stat. TODO: allow to not exclude NAs
+  # /!\ We exclude NA before computing the stat. 
   e <- data
   if (on_control) e <- e[e$treatment=="None",]
   if (missing(folder)) folder <- automatic_folder(along, data)
@@ -1483,7 +1474,7 @@ heatmap_table <- function(vars, labels = vars, data = e, along = "country_name",
   nb_vars <- length(vars)
   if (length(conditions)==1) conditions <- rep(conditions[1], nb_vars)
   up_labels <- c(special, levels)
-  if (any(c('non-OECD', 'Non-OECD', 'non-oecd') %in% special)) { # TODO manage all df
+  if (any(c('non-OECD', 'Non-OECD', 'non-oecd') %in% special)) { 
     if (length(levels) == 14) up_labels <- c(special[!special %in% c('non-OECD', 'Non-OECD', 'non-oecd')], levels)
     else if (levels[15]=="Brazil") up_labels <- c(special[!special %in% c('non-OECD', 'Non-OECD', 'non-oecd')], levels[1:14], "Non-OECD", levels[15:length(levels)])
     else warning("Unkown number of levels") }
@@ -1541,7 +1532,7 @@ heatmap_wrapper <- function(vars, labels = vars, name = deparse(substitute(vars)
   # Longest label: "Richest countries should pay even more to help vulnerable ones" (62 characters, variables_burden_sharing_few).
   # special can be c("World", "OECD")
   if (is.null(folder)) folder <- automatic_folder(along, data)
-  if (is.null(width)) width <- ifelse(length(labels) <= 3, 1000, ifelse(length(labels) <= 8, 1550, 1770)) # TODO! more precise than <= 3 vs. > 3
+  if (is.null(width)) width <- ifelse(length(labels) <= 3, 1000, ifelse(length(labels) <= 8, 1550, 1770)) 
   if (is.null(height)) height <- ifelse(length(labels) <= 3, 163, ifelse(length(labels) <= 8, 400, 600))
 
   for (cond in conditions) {
@@ -2311,8 +2302,6 @@ merge_maps <- function(map1, map2) {
 # outcomes, covariates: string vectors / subsamples: variable name
 # /!\ when logit_margin = T, we don't take weight into account (haven't found an R function that gives the marginal logit effects with weight)
 regressions_list <- function(outcomes, covariates, subsamples = NULL, df = e, logit = c(FALSE), weight = 'weight', atmean = T, logit_margin = T, summary = FALSE) {
-  # TODO! handle outcomes of type "future_richness" (so that they are understood as as.numeric(future_richness))
-  # TODO! handle along of type "income" (so that they are understood as as.factor(income)) => this can be done using , names_levels = paste0("as.factor(income)", c("Q1", "Q2", "Q3", "Q4"))
   if (length(logit)==1) if (is.null(subsamples)) logit <- rep(logit, length(outcomes)) else logit <- logit <- rep(logit, length(outcomes)*max(1, length(Levels(df[[subsamples]]))))
   regs <- list()
   i <- 0
@@ -2348,8 +2337,6 @@ mean_ci_along_regressions <- function(regs, along, labels, df = e, origin = 'oth
                                       subsamples = NULL, names_levels = paste0(along, levels_along), levels_along = Levels(df[[along]]), weight = 'weight', print_regs = FALSE) { # to handle numeric variables: levels_along = ifelse(is.numeric(df[[along]]), c(), Levels(df[[along]]))
   # names_levels[1] should correspond to the control group (concatenation of along and the omitted level)
   # origin can be 0, 'intercept': the intercept, the 'control_mean': true (or predicted) mean of the control group, or 'others_at_mean': all variables at their mean except along (at 0 i.e. the control group)
-  # TODO: logit, origin
-  # TODO! handle continuous covariates; covariates/regressions with only one level; solve glitch of displaying some omitted values (e.g. Vote: Left)
   if (!is.null(subsamples) && subsamples == along && !is.null(covariates)) {
     mean_ci <- data.frame()
     for (v in covariates) {
@@ -2374,7 +2361,7 @@ mean_ci_along_regressions <- function(regs, along, labels, df = e, origin = 'oth
     mean_ci <- data.frame()
     i <- 0
     if (class(regs) != "list") regs <- list(regs)
-    if (length(logit)==1) logit <- rep(logit, length(regs)) # TODO determine automatically whether logit through class(regs)
+    if (length(logit)==1) logit <- rep(logit, length(regs)) 
     for (r in regs) {
       if (print_regs) print(summary(r))
       i <- i+1
@@ -2417,13 +2404,13 @@ mean_ci_along_regressions <- function(regs, along, labels, df = e, origin = 'oth
 
         n <- length(reg$fitted.values)
         t <- qt(1-(1-confidence)/2, n)
-        sigma <- sqrt(wtd.mean((reg$y - reg$fitted.values)^2)) #, weights = data_s$weight)) TODO: handle weight for logit_margin (uncommenting this would only work when there is no missing value so that length(data_s$weight)==length(reg$y))
+        sigma <- sqrt(wtd.mean((reg$y - reg$fitted.values)^2)) #, weights = data_s$weight)) 
         SDs <- sapply(levels_along, function(i) return(sqrt(wtd.mean(((data_s[[along]] == i) - wtd.mean(data_s[[along]] == i, weights = data_s$weight, na.rm = T))^2, weights = data_s$weight, na.rm = T))))
         CI <- cbind(coefs - t*sqrt(1/n)*sigma/SDs, coefs + t*sqrt(1/n)*sigma/SDs) # CIs approximated as if the results were that of a linear regression. Stata uses a more appropriate method: the Delta method (which also have some issues: CIs can be outside [0; 1]), not easily implementable in R (despite msm::deltamethod)
       } else { # OLS
         if (logit[i]) warning("Are you sure you want the logit coefficients rather than the marginal effects? If not, set logit_margin = T.")
         #   mean_ci_origin <- binconf(x = sum(data_s[[weight]][data_s[[along]] == levels_along[1]], na.rm=T), n = sum(data_s[[weight]], na.rm=T), alpha = 1-confidence) # WRONG! This is the CI for the group mean, not the CI for the regression coefficient!
-        #   CI_origin <- mean_ci_origin[2:3] - (origin_value == 0) * mean_ci_origin[1] # c(0, 0) # TODO! check that this confidence interval at the origin is correct (I doubt it)
+        #   CI_origin <- mean_ci_origin[2:3] - (origin_value == 0) * mean_ci_origin[1] # c(0, 0) 
         n <- length(reg$fitted.values)
         t <- qt(1-(1-confidence)/2, n)
         if (!("weight" %in% names(data_s))) data_s$weight <- 1
@@ -2475,7 +2462,7 @@ mean_ci <- function(along, outcome_vars = outcomes, outcomes = paste0(outcome_va
       if (length(outcomes) > 1) warning("There cannot be several outcomes with subsamples, only the first outcome will be used.")
       outcome <- outcomes[1]
       y_loop <- Levels(df[[subsamples]])
-      if (missing(labels) | identical(labels, outcome_vars)) labels <- y_loop # TODO: replace by/use name_levels or levels_along
+      if (missing(labels) | identical(labels, outcome_vars)) labels <- y_loop 
       if (is.character(y_loop)) y_loop <- paste0("'", y_loop, "'")
       cond <- paste0("[x$", subsamples, "==", y_loop, "]")
       configurations <- paste0("(x$", outcome, ")", cond, ", w = x[[weight]]", cond)
@@ -2517,9 +2504,6 @@ plot_along <- function(along, mean_ci = NULL, vars = outcomes, outcomes = paste0
                        origin = 'others_at_mean', logit = c(FALSE), atmean = T, logit_margin = T, labels_along = levels_along, names_levels = paste0(along, levels_along), levels_along = Levels(df[[along]]),  # condition = "> 0", #country_heterogeneity = FALSE, along_labels,
                        confidence = 0.95, weight = "weight", heterogeneity_condition = "", return_mean_ci = FALSE, print_name = FALSE, legend_top = FALSE, to_percent = FALSE, colors = NULL, color_RdBu = FALSE,
                        legend_x = '', legend_y = '', plot_origin_line = FALSE, name = NULL, folder = '../figures/country_comparison/', width = dev.size('px')[1], height = dev.size('px')[2], save = T, order_y = NULL, order_along = NULL) {
-  # TODO multiple conditions, show legend for 20 countries (display UA!) even if there is less than 4 variables
-  # TODO: automatic values when missing(legend_x), legend_y
-  # TODO! make invert_y_along work for regressions/covariates
   if (exists("labels_vars") & missing(labels)) labels[vars %in% names(labels_vars)] <- labels_vars[vars[vars %in% names(labels_vars)]]
   if (missing(name) & !missing(vars) & !missing(along)) {
     if (any(grepl('["\']', deparse(substitute(vars))))) {
@@ -2533,7 +2517,7 @@ plot_along <- function(along, mean_ci = NULL, vars = outcomes, outcomes = paste0
     name <- ifelse(invert_y_along, paste0(along, "_by_", mean_ci), paste0(mean_ci, "_by_", along))
   } else if (missing(name)) name <- "temp"
   name <- sub("rev(", "", sub(")", "", sub("country_name", "country", name, fixed = T), fixed = T), fixed = T)
-  if (print_name) print(name) # TODO: name with subsamples
+  if (print_name) print(name) 
 
   if (missing(folder) & deparse(substitute(df)) %in% tolower(countries)) folder <- paste0("../figures/", toupper(deparse(substitute(df))), "/")
 
@@ -2550,7 +2534,7 @@ plot_along <- function(along, mean_ci = NULL, vars = outcomes, outcomes = paste0
   #    names(mean_ci)[which(names(mean_ci) == "y")] <- "along"
   #    names(mean_ci)[which(names(mean_ci) == "temp")] <- "y" # or the les robust one-liner: names(mean_ci) <- c("variable", "mean", "CI_low", "CI_high", "along")
   #  } else if (country_heterogeneity) {
-  #    names(mean_ci)[which(names(mean_ci) == "variable")] <- "policy" # TODO: generalize this by rewriting heterogeneity_mean_CI
+  #    names(mean_ci)[which(names(mean_ci) == "variable")] <- "policy" 
   #    names(mean_ci)[which(names(mean_ci) == "country")] <- "y"
   # }
 

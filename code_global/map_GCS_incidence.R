@@ -1,3 +1,6 @@
+# Alternatively, just load co2_pop and go to Export maps and table
+# readRDS("../data/map_GCS/co2_pop.rds")
+
 ##### Population data #####
 years <- c(2005, seq(2010, 2100, 10))
 # pop <- read.csv("../data/map_GCS/future population by age 2022.csv") # https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2022_PopulationByAge5GroupSex_Medium.zip
@@ -345,7 +348,6 @@ co2_pop$gdr_pa_2030 <- (co2_pop$emissions_baseline_2030 - co2_pop$rci_2030 * wor
 
 compute_npv <- function(var = "gain_pa_", discount_rate = discount, data = co2_pop) {
   rate <- (1+discount_rate)^10
-  # /!\ NPV is computed on 2020-2100. TODO? Compute it on 2030-2080 (this would make India neutral in Generous EU as the positive part comes from 2020).
   return(rowSums(sapply(2:10, function(i) { return(10*data[[paste0(var, 2000+10*i)]]/rate^(i-2)) })))
 }
 
@@ -364,9 +366,7 @@ compute_gain_given_parties <- function(parties = df$code, df = co2_pop, return =
     }
     df[[paste0("gain_optout_", y)]] <- df[[paste0("participation_rate_", y)]] * (basic_income[yr] - df[[paste0("revenues_pa_", y)]])
     # Adjusted to avoid high-income receiving money. Pb: GDP in PPP of Europe is not more than twice the world average 2050-2070.
-    # /!\ Pb, 2070 GDP pc PPP of China is larger that Western Europe in View(ssp1_26[,c("region", "gdp_pc_2020", "gdp_pc_2070")]) co2_pop$gdp_pc_2070[co2_pop$country %in% c("China", "Spain", "France", "Nigeria", "Namibia")]
     # To estimate future emissions and GDP, I make the assumption that emissions_pc/GDPpc evolve in the same way in all big regions. Pb: this assumption is at odd with SSP1, where GDPpc converge across regions.
-    # => Either I should drop the country-by-country analysis, or I should find better projections of GDP.
     y_bar <- wtd.mean(df[[paste0("gdp_pc_", y)]], df[[paste0("participation_rate_", y)]] * df[[paste0("pop_", y)]])
     e_bar <- wtd.mean(df[[paste0("emissions_pa_", y)]], df[[paste0("participation_rate_", y)]] * df[[paste0("adult_", y)]])
     lambda <- pmax(0, pmin(1, (2.2*y_bar - df[[paste0("gdp_pc_", y)]])/((2.2-2)*y_bar))) # lambda = 1 means full basic income, lambda = 0 means basic income is proportional to emissions (if they are below 1.3*average)
@@ -401,8 +401,6 @@ create_var_ssp <- function(ssp, df = co2_pop, base_year = 2019, CC_convergence =
   if (grepl("ssp1", ssp_name)) model <- "IMAGE"
   else if (ssp_name %in% c("ssp2_ref", "ssp2_26_country") | grepl("gea", ssp_name)) model <- "MESSAGE"
   else model <- "big"
-  # Dirty fix for unrealistically high projections of GDP pc for middle-income African countries: we assign them to China region, which has a comparable GDP pc, so the projection of GDP pc are more credible
-  # TODO? Make our own projections for all countries, grouping countries based on GDP pc and carbon footprint rather than geography, and deriving projections by group from SSPs or GEA macro-regions.
   recoded_countries <- c("BWA", "GAB", "GNQ", "ZAF", "NAM")
   if (grepl("gea", ssp_name)) message_region_by_code_original <- message_region_by_code
   if (grepl("gea", ssp_name)) message_region_by_code[recoded_countries] <- "MEA" # c("Botswana", "Gabon", "Equatorial Guinea", "South Africa", "Namibia)
@@ -428,7 +426,7 @@ create_var_ssp <- function(ssp, df = co2_pop, base_year = 2019, CC_convergence =
         df$gdp_pc_base_year <- df$gdp_pc_2019 # manage missing values (Venezuela, Yemen, South Sudan, North Korea, Eritrea, fix Western Sahara)
       } else {
         ssp[[paste0("gdp_", y)]] <- ssp[[paste0("gdp_ppp_", y)]]
-        df$gdp_pc_base_year <- df$GDPpcPPP  # TODO: manage missing values (Saudi Arabia, Afghanistan, New Zealand, Cambodia...)
+        df$gdp_pc_base_year <- df$GDPpcPPP  
       }
     } else df$gdp_pc_base_year <- df$GDPpcPPP
     if (grepl("gea", ssp_name)) {
