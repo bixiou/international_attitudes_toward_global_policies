@@ -1,11 +1,15 @@
 start <- Sys.time()
 
-##### Prepare data and figures #####
+##### Load packages and functions #####
+source("0_Rprofile.R")
+# Then, either A. or B.
+
+##### A. Prepare data and figures #####
 source("2_preparation.R")
 save.image("after_preparation.RData")
 
 
-##### Load prepared data #####
+##### B. Load prepared data #####
 load("after_preparation.RData")
 
 # Figure 1: questionnaire/survey_flow-simple.pdf

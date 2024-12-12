@@ -1,4 +1,3 @@
-source("0_Rprofile.R")
 source("1_relabel_rename.R")
 # source("conjoint_analysis.R")
 # Our panelist is Bilendi/Respondi. Their partner panelist in the U.S. is Prodedge. 

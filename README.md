@@ -1,4 +1,4 @@
-# Reproduction code for "International Attitudes Toward Global Policies" 
+# Reproduction code for "International Majorities Genuinely Support Global Redistributive and Climate Policies" 
 
 LICENSE: GNU AFFERO GENERAL PUBLIC LICENSE Version 3
 
@@ -11,22 +11,19 @@ DOI of the github repository: [![DOI](https://zenodo.org/badge/702713860.svg)](h
 
 # Summary:
 - The code is in R.
-- The main file is code_global/paper.R: it enables researchers to reproduce all the empirical findings of the paper section by section.
-- In order to run this script, one first needs to (1) run code_global/.Rprofile and (2) either loads code_global/.RData or run code_global/preparation.R.
-- Figures can be reproduced using code_global/render.R.
+- The main file is code_global/3_paper.R: it enables researchers to reproduce all the empirical findings of the paper section by section, including figures and tables.
+- This script will first run code_global/0_Rprofile.R. Then, it either (A) prepares the data by running code_global/1_relabel_rename.R and code_global/preparation.R; or (B) loads code_global/after_preparation.RData.
 - We recommend users to create an R Project within code_global/.
 
 # List of files
 code_global/: All code, exclusively in R.
 code_global/.RData: Final datasets.
-code_global/.Rprofile: First file to run in R: loads packages and defines custom functions.
-code_global/preparation.R: Cleanses and prepares the dataset.
-code_global/render.R: Generates the figures.
-code_global/paper.R: Reproduces the paper.
-code_global/relabel_rename.R: Called in preparation.R, defines the variable names.
+code_global/0_Rprofile.R: First file to run in R: loads packages and defines custom functions.
+code_global/1_relabel_rename.R: Called in preparation.R, defines the variable names.
+code_global/2_preparation.R: Cleanses and prepares the dataset.
+code_global/3_paper.R: Reproduces the paper.
 code_global/conjoint_analysis: Reproduces the conjoint analysis.
 code_global/map_GCS_incidence.R: Estimates the effects of international climate policies and plots the associated maps.
-code_global/IAT.R: Implicit Association Test. Only used in the pilot surveys.
 code_global/zipcodes.R: Summarizes relevant information on zipcodes from raw official data. Used to code the respondent's region in Qualtrics.
 
 conjoint_analysis/: Files used to code the conjoint analysis in Qualtrics and analyze its results. Cf. code_global/conjoint_analysis.R for reproduction instructions.
@@ -69,8 +66,8 @@ URL: https://github.com/bixiou/international_climate_attitudes/data
 # Computational requirements
 Software requirement: R.
 The following software and language versions were used: RStudio 2024.04.1 748; R 4.3.1.
-A particular version (0.99.22) of the R package "memisc" is needed. Similarly, a patched version of the R package "stargazer" is required. If another version of "memisc" or "stargazer" is installed, .Rprofile will automatically uninstall it and install the appropriate version.
+A particular version (0.99.22) of the R package "memisc" is needed. Similarly, a patched version of the R package "stargazer" is required. If another version of "memisc" or "stargazer" is installed, 0_Rprofile.R will automatically uninstall it and install the appropriate version.
 
 # Reproduction time
 Duration necessary to install all packages (on a laptop): 20 min.
-Duration of computations (on a laptop): 1 hour.
+Duration of full reproduction (on a laptop): 7 min.
