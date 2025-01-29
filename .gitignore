@@ -6,7 +6,7 @@ Adrien's/
 *.RDataTmp
 *.RDataTmp1
 *.RDataTmp2
-*.RData
+/code_global/*.RData
 *.RData.bak
 *.Rhistory
 *.RprofileUnused

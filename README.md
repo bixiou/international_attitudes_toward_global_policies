@@ -59,8 +59,8 @@ US1: data/US1.csv
 US2: data/US2.csv
 
 ## Global Survey Data
-Fully available upon publication of the companion paper.
-URL: https://github.com/bixiou/international_climate_attitudes/data
+Fully available data, code, and figures.
+URL: https://github.com/bixiou/intl_climate_attitudes
 
 
 # Computational requirements
