@@ -33,6 +33,7 @@ data/EU.csv: Raw data from Complementary Survey EU.
 data/US1.csv: Raw data from Complementary Survey US1.
 data/US2.csv: Raw data from Complementary Survey US2.
 data/fields: Data of open-ended fields converted to .xlsx and classified, with translations.
+data/global_survey.RData: Cleaned data of the global survey (see https://github.com/bixiou/intl_climate_attitudes for code and raw data).
 
 figures/: Figures generated from render.R.
 figures/all: Figures on the merged sample.
